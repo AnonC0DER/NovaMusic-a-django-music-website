@@ -1,0 +1,49 @@
+from django.test import TestCase
+from music.models import Music
+from django.utils.text import slugify
+
+class TestMusicModel(TestCase):
+
+    def setUp(self):
+        self.music = Music.objects.create(title='Test music')
+
+    def test_music_object_exists(self):
+        '''Test music object created and exists in the database'''
+        self.assertTrue(Music.objects.filter(title=self.music.title).exists())
+
+    def test_slug_field(self):
+        '''Test slug field and slug signal'''
+        title = self.music.title
+        title_slug = slugify(title)
+
+        self.assertEqual(title_slug, self.music.slug)
+
+    def test_valid_title(self):
+        '''Testing valid title'''
+        title = 'Test music'
+        qs = Music.objects.filter(title=title)
+
+        self.assertTrue(qs.exists())
+
+    def test_created_object_count(self):
+        '''Test there's only one object that is created in database'''
+        qs = Music.objects.all().count()
+
+        self.assertEqual(qs, 1)
+
+    def test_published_is_false(self):
+        '''Test default object isn't published'''
+        self.assertEqual(self.music.published, False)
+
+    def test_created_datetime(self):
+        '''Test created datetime is auto now added'''
+        obj_datetime = self.music.created
+
+        self.assertTrue(obj_datetime is not None)
+
+    def test_object_id(self):
+        '''Test object ID'''
+        obj_id = self.music.id
+        qs = Music.objects.filter(id=obj_id)
+
+        self.assertTrue(qs.exists())
