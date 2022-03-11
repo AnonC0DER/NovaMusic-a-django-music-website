@@ -1,11 +1,21 @@
 from django.test import TestCase
 from music.models import Music
+from artist.models import Artist
+from album.models import Album
+from genre.models import Genre
 from django.utils.text import slugify
 
 class TestMusicModel(TestCase):
 
     def setUp(self):
-        self.music = Music.objects.create(title='Test music')
+        self.album = Album.objects.create(title='Test album')
+        self.music = Music.objects.create(title='Test music', album=self.album)
+
+    def test_get_album_name(self):
+        '''Test get_album_name() method in Music model'''
+        qs = self.music.get_album_name()
+        
+        self.assertEqual(qs, self.album.title)
 
     def test_music_object_exists(self):
         '''Test music object created and exists in the database'''

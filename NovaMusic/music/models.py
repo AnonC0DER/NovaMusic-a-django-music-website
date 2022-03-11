@@ -12,7 +12,7 @@ class Music(models.Model):
     title = models.CharField(max_length=220)
     thumbnail = models.ImageField(upload_to='SongsThumbnails/', default='SongsThumbnails/default.jpg')
     artists = models.ManyToManyField(Artist)
-    album = models.ForeignKey(Album, on_delete=models.CASCADE, null=True, blank=True)
+    album = models.ForeignKey(Album, on_delete=models.SET_NULL, null=True, blank=True)
     genre = models.ManyToManyField(Genre)
     song = models.FileField(upload_to='Songs/', null=True, blank=True)
     song_url = models.CharField(max_length=350, null=True, blank=True)
@@ -21,6 +21,13 @@ class Music(models.Model):
     published = models.BooleanField(default=False)
     single_track = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now_add=True)
+
+    def get_album_name(self):
+        '''If the music object is connected to a album then get album name'''
+        try:
+            return self.album.title
+        except:
+            pass
 
     def __str__(self):
         return self.title
