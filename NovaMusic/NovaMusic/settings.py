@@ -29,6 +29,7 @@ INSTALLED_APPS = [
     'music',
     'artist',
     'album',
+    'genre'
 ]
 
 MIDDLEWARE = [
