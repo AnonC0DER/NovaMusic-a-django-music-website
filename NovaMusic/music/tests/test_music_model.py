@@ -8,8 +8,32 @@ from django.utils.text import slugify
 class TestMusicModel(TestCase):
 
     def setUp(self):
+        self.artist = Artist.objects.create(title='Test artist')
+        self.genre = Genre.objects.create(title='Test genre')
         self.album = Album.objects.create(title='Test album')
         self.music = Music.objects.create(title='Test music', album=self.album)
+
+        self.music.genres.set([self.genre])
+        self.music.artists.set([self.artist])
+        self.music.save()
+
+    def test_music_album_object(self):
+        '''Test music and album model relation'''
+        self.assertEqual(self.album, self.music.album)
+    
+    def test_music_artist_object(self):
+        '''Test music and artist model relation'''
+        artists = Artist.objects.all()
+        music_artist = self.music.artists.first()
+
+        self.assertIn(music_artist, artists)
+    
+    def test_music_genre_object(self):
+        '''Test music and genre model relation'''
+        music_genre = self.music.genres.first()
+        qs = Genre.objects.filter(title=music_genre.title)
+
+        self.assertTrue(qs.exists())
 
     def test_get_album_name(self):
         '''Test get_album_name() method in Music model'''

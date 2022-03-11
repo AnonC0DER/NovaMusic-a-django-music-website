@@ -13,7 +13,7 @@ class Music(models.Model):
     thumbnail = models.ImageField(upload_to='SongsThumbnails/', default='SongsThumbnails/default.jpg')
     artists = models.ManyToManyField(Artist)
     album = models.ForeignKey(Album, on_delete=models.SET_NULL, null=True, blank=True)
-    genre = models.ManyToManyField(Genre)
+    genres = models.ManyToManyField(Genre)
     song = models.FileField(upload_to='Songs/', null=True, blank=True)
     song_url = models.CharField(max_length=350, null=True, blank=True)
     lyrics = models.TextField(null=True, blank=True)
