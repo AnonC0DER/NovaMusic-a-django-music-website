@@ -6,4 +6,4 @@ class ArtistAdmin(admin.ModelAdmin):
     list_display = ['title', 'id']
     search_fields = ['title']
 
-admin.site.register(Artist)
+admin.site.register(Artist, ArtistAdmin)
