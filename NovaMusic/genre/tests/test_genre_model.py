@@ -31,10 +31,6 @@ class TestGenreModel(TestCase):
 
         self.assertEqual(qs, 1)
 
-    def test_published_is_false(self):
-        '''Test default object isn't published'''
-        self.assertEqual(self.genre.published, False)
-
     def test_created_datetime(self):
         '''Test created datetime is auto now added'''
         obj_datetime = self.genre.created
