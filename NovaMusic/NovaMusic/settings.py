@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
     'music',
     'artist',
     'album',
@@ -76,13 +77,22 @@ WSGI_APPLICATION = 'NovaMusic.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'HOST' : os.getenv('HOST'),
+        'NAME': os.getenv('NAME'),
+        'USER' : os.getenv('USER'),
+        'PASSWORD' : os.getenv('DB_PASSWORD'),
     }
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 
 
 # Password validation
@@ -144,3 +154,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'core.User'
+
+# ARVAN CLOUD STORAGE
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+AWS_ACCESS_KEY_ID = os.getenv('ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.getenv('SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.getenv('STORAGE_BUCKET_NAME')
+AWS_SERVICE_NAME = 's3'
+AWS_S3_ENDPOINT_URL = 'https://s3.ir-thr-at1.arvanstorage.com'
+AWS_S3_FILE_OVERWRITE = False
+AWS_LOCAL_STORAGE = f'{BASE_DIR}/aws/'
