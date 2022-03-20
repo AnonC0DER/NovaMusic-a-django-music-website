@@ -38,7 +38,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Comment(models.Model):
-    '''Main Comment model, AlbumComment and MusicComment inherit from this model'''
     body = models.TextField(max_length=320)
     created = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=False)

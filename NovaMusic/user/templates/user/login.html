@@ -1,0 +1,47 @@
+{% extends 'main.html' %}
+{% block content %}
+{% block title %} <title>Sing In | NovaMusic</title>{% endblock title %}
+<!-- main content -->
+<main class="main">
+    <div class="container-fluid">
+        <div class="row row--grid">
+            <!-- breadcrumb -->
+            <div class="col-12">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb__item"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="breadcrumb__item breadcrumb__item--active">Sing In</li>
+                </ul>
+            </div>
+            <!-- end breadcrumb -->
+
+            <!-- sign in -->
+            <div class="col-12">
+                <div class="sign">
+                    <div class="sign__content">
+                        <!-- authorization form -->
+                        <form method="POST" action="" class="sign__form">
+                            {% csrf_token %}
+                            <div class="sign__group">
+                                <input type="text" class="sign__input" placeholder="Email" name="email">
+                            </div>
+
+                            <div class="sign__group">
+                                <input type="password" class="sign__input" placeholder="Password" name="password">
+                            </div>
+                            
+                            <button class="sign__btn" type="submit">Sign in</button>
+
+                            <span class="sign__text">Don't have an account? <a href="{% url 'register' %}">Sign up!</a></span>
+
+                            <span class="sign__text"><a href="{% url 'reset_password' %}">Forgot password?</a></span>
+                        </form>
+                        <!-- end authorization form -->
+                    </div>
+                </div>
+            </div>
+            <!-- end sign in -->
+        </div>
+    </div>
+</main>
+<!-- end main content -->
+{% endblock content %}
