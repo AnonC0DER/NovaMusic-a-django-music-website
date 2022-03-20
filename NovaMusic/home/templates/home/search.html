@@ -1,0 +1,150 @@
+{% extends 'main.html' %}
+{% load static %}
+{% block title %} <title>Searched for {{query}} | NovaMusic</title>{% endblock title %}
+{% block content %}
+<!-- main content -->
+<main class="main">
+    <div class="container-fluid">
+        <div class="main__title">
+            <h2>Searched for &#160;<i>{{query}}</i></h2>
+        </div>
+
+        {% if songs %}
+        <!-- songs -->
+        <section class="row row--grid">
+            <!-- title -->
+            <div class="col-12">
+                <div class="main__title">
+                    <h2>{{songs.count}} Song{% if songs.count > 1 %}{{'s'}}{% endif %} found</h2>
+                </div>
+            </div>
+            <!-- end title -->
+            
+            {% for song in songs %}
+            <div class="col-6 col-sm-4 col-lg-2">
+                <div class="album">
+                    <div class="album__cover">
+                        <img src="{{song.thumbnail.url}}" alt="">
+                        <a data-link data-title="{{song.title}}" data-artist="{% for artist in song.artists.all %}{{artist.title}}{% endfor %}" data-img="{{song.thumbnail.url}}" href="{{song.song.url}}" class="single-item__cover">
+                            <img src="{{song.thumbnail.url}}" alt="">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.54,9,8.88,3.46a3.42,3.42,0,0,0-5.13,3V17.58A3.42,3.42,0,0,0,7.17,21a3.43,3.43,0,0,0,1.71-.46L18.54,15a3.42,3.42,0,0,0,0-5.92Zm-1,4.19L7.88,18.81a1.44,1.44,0,0,1-1.42,0,1.42,1.42,0,0,1-.71-1.23V6.42a1.42,1.42,0,0,1,.71-1.23A1.51,1.51,0,0,1,7.17,5a1.54,1.54,0,0,1,.71.19l9.66,5.58a1.42,1.42,0,0,1,0,2.46Z"/></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16,2a3,3,0,0,0-3,3V19a3,3,0,0,0,6,0V5A3,3,0,0,0,16,2Zm1,17a1,1,0,0,1-2,0V5a1,1,0,0,1,2,0ZM8,2A3,3,0,0,0,5,5V19a3,3,0,0,0,6,0V5A3,3,0,0,0,8,2ZM9,19a1,1,0,0,1-2,0V5A1,1,0,0,1,9,5Z"/></svg>
+                        </a>
+                    </div>
+                    <div class="album__title">
+                        <h3><a href="{% url 'single-song' song.slug song.id %}">{{song.title}}</a></h3>
+                        <span>
+                            {% for artist in song.artists.all %}
+                                <a href="{% url 'single-artist' artist.slug artist.id %}">{{artist.title}}</a>,
+                            {% endfor %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </section>
+        <!-- end songs -->
+        {% endif %}
+
+
+        {% if albums %}
+        <!-- albums -->
+        <section class="row row--grid">
+            <!-- title -->
+            <div class="col-12">
+                <div class="main__title">
+                    <h2>{{albums.count}} Album{% if albums.count > 1 %}{{'s'}}{% endif %} found</h2>
+                </div>
+            </div>
+            <!-- end title -->
+            
+            {% for album in albums %}
+            <div class="col-6 col-sm-4 col-lg-2">
+                <div class="album">
+                    <div class="album__cover">
+                        <img src="{{album.album_image.url}}" alt="">
+                        <a href="{% url 'single-album' album.slug album.id %}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.54,9,8.88,3.46a3.42,3.42,0,0,0-5.13,3V17.58A3.42,3.42,0,0,0,7.17,21a3.43,3.43,0,0,0,1.71-.46L18.54,15a3.42,3.42,0,0,0,0-5.92Zm-1,4.19L7.88,18.81a1.44,1.44,0,0,1-1.42,0,1.42,1.42,0,0,1-.71-1.23V6.42a1.42,1.42,0,0,1,.71-1.23A1.51,1.51,0,0,1,7.17,5a1.54,1.54,0,0,1,.71.19l9.66,5.58a1.42,1.42,0,0,1,0,2.46Z"/></svg></a>
+                    </div>
+                    <div class="album__title">
+                        <h3><a href="{% url 'single-album' album.slug album.id %}">{{album.title}}</a></h3>
+                        <span>
+                            {% for artist in album.artists.all %}
+                                <a href="{% url 'single-artist' artist.slug artist.id %}">{{artist.title}}</a>,
+                            {% endfor %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+        </section>
+        <!-- end albums -->
+        {% endif %}
+
+
+        {% if artists %}
+        <!-- artists -->
+        <section class="row row--grid">
+            <!-- title -->
+            <div class="col-12">
+                <div class="main__title">
+                    <h2>{{artists.count}} Artist{% if artists.count > 1 %}{{'s'}}{% endif %} found</h2>
+                </div>
+            </div>
+            <!-- end title -->
+            
+            {% for artist in artists %}
+            <div class="col-6 col-sm-4 col-lg-2">
+                <div class="album">
+                    <a href="{% url 'single-artist' artist.slug artist.id %}">
+                        <div class="album__cover">
+                            <img src="{{artist.picture.url}}" alt="">
+                        </div>
+                    </a>
+                    <div class="album__title">
+                        <h3><a href="{% url 'single-artist' artist.slug artist.id %}">{{artist.title}}</a></h3>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+        <!-- end artists -->
+        {% endif %}
+
+
+        {% if genres %}
+        <!-- genres -->
+        <section class="row row--grid">
+            <!-- title -->
+            <div class="col-12">
+                <div class="main__title">
+                    <h2>{{genres.count}} Genre{% if genres.count > 1 %}{{'s'}}{% endif %} found</h2>
+                </div>
+            </div>
+            <!-- end title -->
+            
+            {% for genre in genres %}
+            <div class="col-6 col-sm-4 col-lg-2">
+                <div class="album">
+                    <a href="{% url 'genre' genre.slug genre.id %}">
+                        <div class="album__cover">
+                            <img src="{{genre.poster.url}}" alt="">
+                        </div>
+                    </a>
+                    <div class="album__title">
+                        <h3><a href="{% url 'genre' genre.slug genre.id %}">{{genre.title}}</a></h3>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+        <!-- end genres -->
+        {% endif %}
+    
+        
+    </div>
+</main>
+<!-- end main content -->
+
+{% endblock content %}

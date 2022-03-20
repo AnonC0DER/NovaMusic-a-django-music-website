@@ -1,0 +1,205 @@
+{% extends 'main.html' %}
+{% load poll_extras %}
+{% load static %}
+{% block title %} <title>{{song.title}} | NovaMusic</title>{% endblock title %}
+{% block content %}
+
+<style>
+    .comment__label{
+        color: white;
+    }
+</style>
+
+<!-- main content -->
+<main class="main">
+    <div class="container-fluid">
+        <div class="row row--grid">
+            <!-- breadcrumb -->
+            <div class="col-12">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb__item"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="breadcrumb__item"><a href="{% url 'songs' %}">Songs</a></li>
+                    <li class="breadcrumb__item breadcrumb__item--active">{{song.title}} - {% for artist in song.artists.all %} {{artist.title}}, {% endfor %}</li>
+                </ul>
+            </div>
+            <!-- end breadcrumb -->
+
+            <!-- title -->
+            <div class="col-12">
+                <div class="main__title main__title--page">
+                    <h1>{{song.title}} - {% for artist in song.artists.all %} {{artist.title}}, {% endfor %}</h1>
+                </div>
+            </div>
+            <!-- end title -->
+
+            <div class="col-12">
+                <div class="release">
+                    <div class="release__content">
+                        <div class="album__cover">
+                            <img src="{{song.thumbnail.url}}" alt="">
+                            <a data-link data-title="{{song.title}}" data-artist="{% for artist in song.artists.all %}{{artist.title}}{% endfor %}" data-img="{{song.thumbnail.url}}" href="{{song.song.url}}" class="single-item__cover">
+                                <img src="{{song.thumbnail.url}}" alt="">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.54,9,8.88,3.46a3.42,3.42,0,0,0-5.13,3V17.58A3.42,3.42,0,0,0,7.17,21a3.43,3.43,0,0,0,1.71-.46L18.54,15a3.42,3.42,0,0,0,0-5.92Zm-1,4.19L7.88,18.81a1.44,1.44,0,0,1-1.42,0,1.42,1.42,0,0,1-.71-1.23V6.42a1.42,1.42,0,0,1,.71-1.23A1.51,1.51,0,0,1,7.17,5a1.54,1.54,0,0,1,.71.19l9.66,5.58a1.42,1.42,0,0,1,0,2.46Z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M16,2a3,3,0,0,0-3,3V19a3,3,0,0,0,6,0V5A3,3,0,0,0,16,2Zm1,17a1,1,0,0,1-2,0V5a1,1,0,0,1,2,0ZM8,2A3,3,0,0,0,5,5V19a3,3,0,0,0,6,0V5A3,3,0,0,0,8,2ZM9,19a1,1,0,0,1-2,0V5A1,1,0,0,1,9,5Z"/></svg>
+                            </a>
+                        </div>
+                        <div class="release__stat">
+                            <span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.65,2.24a1,1,0,0,0-.8-.23l-13,2A1,1,0,0,0,7,5V15.35A3.45,3.45,0,0,0,5.5,15,3.5,3.5,0,1,0,9,18.5V10.86L20,9.17v4.18A3.45,3.45,0,0,0,18.5,13,3.5,3.5,0,1,0,22,16.5V3A1,1,0,0,0,21.65,2.24ZM5.5,20A1.5,1.5,0,1,1,7,18.5,1.5,1.5,0,0,1,5.5,20Zm13-2A1.5,1.5,0,1,1,20,16.5,1.5,1.5,0,0,1,18.5,18ZM20,7.14,9,8.83v-3L20,4.17Z"/></svg> {{song.song_duration}}</span>
+                        </div>
+                    </div>
+                    {% if request.user.is_authenticated %}
+                    <a href="{{song.song.url}}" class="release__buy open-modal">Download - The highest quality</a>
+                    {% else %}
+                    <a href="{% url 'login' %}">Please log in to be able to download the music.</a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-8">
+                <div class="article">
+                    <!-- article content -->
+                    <div class="article__content">
+                        {% if song.lyrics %}
+                        <h4>Lyric</h4>
+                        <p>{{song.lyrics|linebreaksbr}}</p>
+                        {% endif %}
+                    </div>
+                    <!-- end article content -->
+
+                    <!-- comments -->
+                    <div class="comments">
+                        <div class="comments__title">
+                            <h4>Comments</h4>
+                            <span>{{comments_count}}</span>
+                        </div>
+
+                        <ul class="comments__list">
+                        {% for comment in song.musiccomment_set.all %}
+                            {% if comment.active is True %}
+                            {% if comment.reply is None %}
+                            <li class="comments__item">
+                                <div class="comments__autor">
+                                    <span class="comments__name">{{comment.owner.name}}</span>
+                                    <span class="comments__time">{{comment.created}}</span>
+                                </div>
+                                <p class="comments__text">{{comment.body|charwrap}}</p>
+                                
+                                <div class="comments__actions">
+                                    <a class="text-decoration-none" data-bs-toggle="collapse" href="#collapseExample{{comment.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        <button onclick="ShowReplyForm('{{comment.id}}')" type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.707,11.293l-8-8A.99991.99991,0,0,0,12,4V7.54492A11.01525,11.01525,0,0,0,2,18.5V20a1,1,0,0,0,1.78418.62061,11.45625,11.45625,0,0,1,7.88672-4.04932c.0498-.00635.1748-.01611.3291-.02588V20a.99991.99991,0,0,0,1.707.707l8-8A.99962.99962,0,0,0,21.707,11.293ZM14,17.58594V15.5a.99974.99974,0,0,0-1-1c-.25488,0-1.2959.04932-1.56152.085A14.00507,14.00507,0,0,0,4.05176,17.5332,9.01266,9.01266,0,0,1,13,9.5a.99974.99974,0,0,0,1-1V6.41406L19.58594,12Z"/></svg><span>Reply</span></button>
+                                    </a>
+                                        {% if request.user.is_authenticated %}
+                                        <form style="display:none" action="{% url 'single-song' song.slug song.id %}" method="post" class="comments__form" id='collapseExample{{comment.id}}'>
+                                            {% csrf_token %}
+                                            {% for field in form %}
+                                            <div class="sign__group">
+                                                <label class="comment__label" for="sign__group">Reply to this comment</label>
+                                                {{field}}
+                                            </div>
+                                            {% endfor %}
+                                            <input type="hidden" name="reply_id" value="{{ comment.id }}">
+                                            <button type="submit" class="sign__btn">Reply</button>
+                                        </form>
+                                        {% else %}
+                                            <p class="comments__text">Please log in to be able to leave a reply.</p>
+                                        {% endif %}
+                                </div>
+                            </li>
+                            {% endif %}
+                            
+                            {% for reply in comment.replies.all %}
+                            {% if reply.active is True %}
+                            <li class="comments__item comments__item--answer">
+                                <div class="comments__autor">
+                                    
+                                    <span class="comments__name">{{reply.owner.name}}</span>
+                                    <span class="comments__time">{{reply.created}}</span>
+                                </div>
+                                <p class="comments__text">{{reply.body|charwrap}}</p>
+                                <div class="comments__actions">
+                                    <a class="text-decoration-none" data-bs-toggle="collapse" href="#collapseExample{{reply.id}}" role="button" aria-expanded="false" aria-controls="collapseExample">
+                                        <button onclick="ShowReplyForm('{{reply.id}}')" id='btn-comment' type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.707,11.293l-8-8A.99991.99991,0,0,0,12,4V7.54492A11.01525,11.01525,0,0,0,2,18.5V20a1,1,0,0,0,1.78418.62061,11.45625,11.45625,0,0,1,7.88672-4.04932c.0498-.00635.1748-.01611.3291-.02588V20a.99991.99991,0,0,0,1.707.707l8-8A.99962.99962,0,0,0,21.707,11.293ZM14,17.58594V15.5a.99974.99974,0,0,0-1-1c-.25488,0-1.2959.04932-1.56152.085A14.00507,14.00507,0,0,0,4.05176,17.5332,9.01266,9.01266,0,0,1,13,9.5a.99974.99974,0,0,0,1-1V6.41406L19.58594,12Z"/></svg><span>Reply</span></button>
+                                    </a>
+                                        {% if request.user.is_authenticated %}
+                                        <form style="display:none" action="{% url 'single-song' song.slug song.id %}" method="post" class="comments__form" id='collapseExample{{reply.id}}'>
+                                            {% csrf_token %}
+                                            {% for field in form %}
+                                            <div class="sign__group">
+                                                <label class="comment__label" for="sign__group">Reply to this reply</label>
+                                                {{field}}
+                                            </div>
+                                            {% endfor %}
+                                            <input type="hidden" name="reply_id" value="{{ reply.id }}">
+                                            <button type="submit" class="sign__btn">Reply</button>
+                                        </form>
+                                        {% else %}
+                                            <p class="comments__text">Please log in to be able to leave a reply.</p>
+                                        {% endif %}
+                                </div>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+                        </ul>
+                        
+                        {% if request.user.is_authenticated %}
+                        <form action="{% url 'single-song' song.slug song.id %}" method="post" class="comments__form">
+                            {% csrf_token %}
+                            {% for field in form %}
+                            <div class="sign__group">
+                                <label class="comment__label" for="sign__group">{{field.label}}</label>
+                                {{field}}
+                            </div>
+                            {% endfor %}
+
+                            <button type="submit" class="sign__btn">Send</button>
+                        </form>
+                        {% else %}
+                            <p class="comments__text">Please log in to be able to leave a comment.</p>
+                        {% endif %}
+                    </div>
+                    <!-- end comments -->
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-4">
+                {% if song.album %}
+                <!-- releases -->
+                <div class="row row--sidebar">
+                    <!-- title -->
+                    <div class="col-12">
+                        <div class="main__title main__title--sidebar">
+                            <h3>Album{% if artist_albums.count > 1 %}{{'s'}}{% endif %} from this artist</h3>
+                        </div>
+                    </div>
+                    <!-- end title -->
+                    {% for album in artist_albums %}
+                    <div class="col-6 col-sm-4 col-lg-6">
+                        <div class="album album--sidebar">
+                            <div class="album__cover">
+                                <img src="{{album.album_image.url}}" alt="">
+                                <a href="{% url 'single-album' album.slug album.id %}"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18.54,9,8.88,3.46a3.42,3.42,0,0,0-5.13,3V17.58A3.42,3.42,0,0,0,7.17,21a3.43,3.43,0,0,0,1.71-.46L18.54,15a3.42,3.42,0,0,0,0-5.92Zm-1,4.19L7.88,18.81a1.44,1.44,0,0,1-1.42,0,1.42,1.42,0,0,1-.71-1.23V6.42a1.42,1.42,0,0,1,.71-1.23A1.51,1.51,0,0,1,7.17,5a1.54,1.54,0,0,1,.71.19l9.66,5.58a1.42,1.42,0,0,1,0,2.46Z"/></svg></a>
+                            </div>
+                            <div class="album__title">
+                                <h3><a href="{% url 'single-album' album.slug album.id %}">{{album.title}}</a></h3>
+                                <span>
+                                    {% for artist in album.artists.all %}
+                                    <a href="{% url 'single-artist' artist.slug artist.id %}">{{artist.title}}</a>
+                                    <br>
+                                    {% endfor %}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                <!-- end releases -->
+                {% endif %}
+            </div>	
+        </div>
+    </div>
+</main>
+<!-- end main content -->
+<script src="{% static 'js/form_show.js' %}"></script>
+{% endblock content %}

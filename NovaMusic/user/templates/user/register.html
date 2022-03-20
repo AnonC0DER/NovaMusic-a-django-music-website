@@ -1,0 +1,47 @@
+{% extends 'main.html' %}
+{% block content %}
+{% block title %} <title>Register | NovaMusic</title>{% endblock title %}
+<!-- main content -->
+<main class="main">
+    <div class="container-fluid">
+        <div class="row row--grid">
+            <!-- breadcrumb -->
+            <div class="col-12">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb__item"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="breadcrumb__item breadcrumb__item--active">Sign up</li>
+                </ul>
+            </div>
+            <!-- end breadcrumb -->
+
+            <!-- registration form -->
+            <div class="col-12">
+                <div class="sign">
+                    <div class="sign__content">
+                        <form method="post" action="{% url 'register' %}" class="sign__form">
+                            {% csrf_token %}
+                    
+                            {% for field in form %}
+                            <div class="sign__group">
+                                <label class="breadcrumb__item">{{ field.label }}</label>
+                                {{field}}
+
+                                {% for error in field.errors %}
+                                <p style="color: red;">{{error}}</p>
+                                {% endfor %}
+                            </div>
+                            {% endfor %}
+                            
+                            <button class="sign__btn" type="submit">Sign up</button>
+
+                            <span class="sign__text">Already have an account? <a href="{% url 'login' %}">Sign in!</a></span>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- end registration form -->
+        </div>
+    </div>
+</main>
+<!-- end main content -->
+{% endblock content %}

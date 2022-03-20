@@ -1,0 +1,76 @@
+{% extends 'main.html' %}
+{% block title %} <title>Artists | NovaMusic</title>{% endblock title %}
+{% block content %}
+<!-- main content -->
+<main class="main">
+    <div class="container-fluid">
+        <!-- artists -->
+        <div class="row row--grid">
+            <!-- breadcrumb -->
+            <div class="col-12">
+                <ul class="breadcrumb">
+                    <li class="breadcrumb__item"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="breadcrumb__item breadcrumb__item--active">Artists</li>
+                </ul>
+            </div>
+            <!-- end breadcrumb -->
+
+            <!-- title -->
+            <div class="col-12">
+                <div class="main__title main__title--page">
+                    <h1>The newest artists</h1>
+                </div>
+            </div>
+            <!-- end title -->
+        </div>
+
+        <div class="row row--grid">
+            <div class="col-12">
+                <div class="main__filter">
+                    <form action="#" class="main__filter-search">
+                        <input type="text" placeholder="Search...">
+                        <button type="button"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.71,20.29,18,16.61A9,9,0,1,0,16.61,18l3.68,3.68a1,1,0,0,0,1.42,0A1,1,0,0,0,21.71,20.29ZM11,18a7,7,0,1,1,7-7A7,7,0,0,1,11,18Z"/></svg></button>
+                    </form>
+
+                    <div class="main__filter-wrap">
+                        <select class="main__select" name="genres">
+                            <option value="all">All artists</option>
+                            <option value="legacy">Legacy artists</option>
+                            <option value="active">Active artists</option>
+                        </select>
+
+                        <select class="main__select" name="years">
+                            <option value="All genres">All genres</option>
+                            {% for genre in genres %}
+                            <option value="1">{{genre.title}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="slider-radio">
+                        <input type="radio" name="grade" id="featured" checked="checked"><label for="featured">Featured</label>
+                        <input type="radio" name="grade" id="popular"><label for="popular">Popular</label>
+                        <input type="radio" name="grade" id="newest"><label for="newest">Newest</label>
+                    </div>
+                </div>
+
+                <div class="row row--grid">
+                    {% for artist in artists %}
+                    <div class="col-6 col-sm-4 col-md-3 col-xl-2">
+                        <a href="{% url 'single-artist' artist.slug artist.id %}" class="artist">
+                            <div class="artist__cover">
+                                <img src="{{artist.picture.url}}" alt="">
+                            </div>
+                            <h3 class="artist__title">{{artist.title}}</h3>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <!-- end artists -->
+
+    </div>
+</main>
+<!-- end main content -->
+{% endblock content %}
