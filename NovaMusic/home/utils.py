@@ -11,16 +11,20 @@ def Search(reqeust):
     if reqeust.GET.get('query'):
         search_query = reqeust.GET.get('query')
     
-    music = Music.objects.distinct().filter(
+    only_published_music = Music.objects.filter(published=True)
+    only_published_albums =  Album.objects.filter(published=True)
+
+    music = only_published_music.distinct().filter(
         Q(title__icontains=search_query) |
         Q(lyrics__icontains=search_query)
     )
     artist = Artist.objects.distinct().filter(
         Q(title__icontains=search_query)
     )
-    album = Album.objects.distinct().filter(
+    album = only_published_albums.distinct().filter(
         Q(title__icontains=search_query)
     )
+    
     genre = Genre.objects.distinct().filter(
         Q(title__icontains=search_query)
     )

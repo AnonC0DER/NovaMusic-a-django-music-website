@@ -3,10 +3,11 @@ from django.contrib import messages
 from music.models import Music, MusicComment
 from album.models import Album
 from music.forms import MusicCommentForm
+from music.utils import Search
 
 def SongsPage(request):
     '''Songs page view'''
-    songs = Music.objects.filter(published=True).order_by('-created')
+    songs = Search(request)
     new_song_for_player = Music.objects.filter(published=True).order_by('-created').first()
     context = {'songs' : songs, 'player' : new_song_for_player}
 

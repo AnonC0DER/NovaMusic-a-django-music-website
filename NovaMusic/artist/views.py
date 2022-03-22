@@ -3,9 +3,10 @@ from artist.models import Artist
 from album.models import Album
 from genre.models import Genre
 from music.models import Music
+from artist.utils import Search
 
 def ArtistsPage(request):
-    get_artists = Artist.objects.all()
+    get_artists = Search(request)
     get_genres = Genre.objects.all()
     new_song_for_player = Music.objects.filter(published=True).order_by('-created').first()
     context = {

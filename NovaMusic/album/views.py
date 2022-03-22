@@ -3,11 +3,12 @@ from django.contrib import messages
 from album.models import Album, AlbumComment
 from genre.models import Genre
 from music.models import Music
+from album.utils import Search
 from album.forms import AlbumCommentForm 
 
 def AlbumsPage(request):
     '''Releases albums view page'''
-    get_published_albums = Album.objects.filter(published=True).order_by('-created')
+    get_published_albums = Search(request)
     new_song_for_player = Music.objects.filter(published=True).order_by('-created').first()
     get_genres = Genre.objects.all()
     context = {'albums' : get_published_albums, 'genres' : get_genres, 'player' : new_song_for_player}
