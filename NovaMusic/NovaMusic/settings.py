@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
     'storages',
     'music',
     'artist',
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
     'core',
     'home',
     'user',
+    'API',
 ]
 
 MIDDLEWARE = [
