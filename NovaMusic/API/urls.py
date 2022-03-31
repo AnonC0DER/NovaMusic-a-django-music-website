@@ -7,12 +7,6 @@ from API.views import (
 )
 
 urlpatterns = [
-<<<<<<< Updated upstream
-    path('genres/', GenreViewset.as_view()),
-    path('artists/', ArtistViewset.as_view()),
-    path('albums/', AlbumViewset.as_view()),
-    path('songs/', MusicViewset.as_view())
-=======
     path('', AllApisUrlsView.as_view()),
     path('genres/', GenreView.as_view()),
     path('genre/<pk>/', GenreView.as_view()),
@@ -25,5 +19,4 @@ urlpatterns = [
 
     path('upload-music/', UploadMusicView.as_view()),
     path('upload-album/', UploadAlbumView.as_view()),
->>>>>>> Stashed changes
 ]

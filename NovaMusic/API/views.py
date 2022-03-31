@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework import generics
 from album.models import Album
@@ -12,11 +12,6 @@ from API.serializers import (
     UploadMusicSerializer, UploadAlbumSerializer
 )
 
-<<<<<<< Updated upstream
-class AlbumViewset(APIView):
-    '''Album view set'''
-    permission_classes = (IsAuthenticated, )
-=======
 class AllApisUrlsView(APIView):
     '''All Apis'''
     def get(self, request, format=None):
@@ -44,40 +39,19 @@ class AllApisUrlsView(APIView):
 class AlbumView(APIView):
     '''To get single album details, use this url : /album/ID/'''
     permission_classes = (IsAdminUser, )
->>>>>>> Stashed changes
-
-    def get(self, request, format=None):
-        albums = Album.objects.all()
-        serializer = AlbumSerializer(albums, many=True)
-        return Response(serializer.data)
-
-
-<<<<<<< Updated upstream
-class GenreViewset(APIView):
-    '''Genre view set'''
-    def get(self, request, format=None):
-        genres = Genre.objects.all()
-        serializer = GenreSerializer(genres, many=True)
-        return Response(serializer.data)
-
-
-class ArtistViewset(APIView):
-    '''Artist view set'''
-    def get(self, request, format=None):
-        artists = Artist.objects.all()
-        serializer = ArtistSerializer(artists, many=True)
-        return Response(serializer.data)
-
-
-class MusicViewset(APIView):
-    '''Music view set'''
-    permission_classes = (IsAuthenticated, )
     
-    def get(self, request, format=None):
-        music = Music.objects.all()
-        serializer = MusicSerializer(music, many=True)
-        return Response(serializer.data)
-=======
+    def get(self, request, pk=None, format=None):
+        if pk:
+            album = Album.objects.get(id=pk)
+            serializer = AlbumSerializer(album, many=False)
+            return Response(serializer.data)
+
+        else:
+            albums = Album.objects.all()
+            serializer = AlbumSerializer(albums, many=True)
+            return Response(serializer.data)
+
+          
 class GenreView(APIView):
     '''To get single genre details, use this url : /genre/ID/'''
     def get(self, request, pk=None, format=None):
@@ -132,4 +106,3 @@ class UploadAlbumView(generics.CreateAPIView):
     '''Upload Album'''
     serializer_class = UploadAlbumSerializer
     permission_classes = (IsAdminUser, )
->>>>>>> Stashed changes
