@@ -53,8 +53,8 @@ def SingleAlbumPage(request, pk, slug):
             return redirect('single-album', slug=get_album.slug, pk=get_album.id)
 
     new_song_for_player = Music.objects.filter(published=True).order_by('-created').first()
-    get_album_songs = Music.objects.filter(album=get_album)
-    artist_albums = Album.objects.filter(artists=get_album.artists.first())[:6]
+    get_album_songs = Music.objects.filter(album=get_album, published=True)
+    artist_albums = Album.objects.filter(artists=get_album.artists.first(), published=True)[:6]
     songs_count = get_album_songs.count()
     album_comments_count = get_album.albumcomment_set.filter(active=True).count()
     
