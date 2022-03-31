@@ -32,3 +32,18 @@ class MusicSerializer(ModelSerializer):
     class Meta:
         model = Music
         fields = '__all__'
+
+
+class UploadMusicSerializer(ModelSerializer):
+    class Meta:
+        model = Music
+        fields = ['title', 'thumbnail', 'song', 'lyrics', 'single_track', 'album', 'artists', 'genres']
+
+
+class UploadAlbumSerializer(ModelSerializer):
+    class Meta:
+        model = Album
+        fields = ['title', 'description', 'album_image', 
+                'album_download_link_high', 'album_download_link_high_file',
+                'album_download_link_medium', 'album_download_link_medium_file', 
+                'release_time', 'artists']
