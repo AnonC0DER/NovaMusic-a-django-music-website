@@ -1,9 +1,14 @@
 from django.urls import path
+from rest_framework.documentation import include_docs_urls
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 from API.views import (
     AllApisUrlsView, AlbumView, 
     MusicView, ArtistView, 
     GenreView, UploadMusicView,
-    UploadAlbumView
+    UploadAlbumView, CheckJWT
 )
 
 urlpatterns = [
@@ -19,4 +24,10 @@ urlpatterns = [
 
     path('upload-music/', UploadMusicView.as_view()),
     path('upload-album/', UploadAlbumView.as_view()),
+
+    path('users/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('users/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('users/check-token/', CheckJWT.as_view()),
+
+    path('docs/', include_docs_urls(title='NovaMusic-APIs')),
 ]

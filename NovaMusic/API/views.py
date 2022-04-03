@@ -25,11 +25,15 @@ class AllApisUrlsView(APIView):
                 'Single artist' : '/api/artist/ID/',
                 'Genres' : '/api/genres/',
                 'Single genre' : '/api/genre/ID/',
+                'NovaMusic APIs documentation' : '/api/docs/'
             },
 
             'POST' : {
                 'Upload album' : '/api/upload-album/',
                 'Upload music' : '/api/upload-music/',
+                'Check JWT token' : '/api/users/check-token/',
+                'Get user token' : '/api/users/token/',
+                'Refresh token' : '/api/users/token/refresh/',
             }
         }
 
@@ -106,3 +110,11 @@ class UploadAlbumView(generics.CreateAPIView):
     '''Upload Album'''
     serializer_class = UploadAlbumSerializer
     permission_classes = (IsAdminUser, )
+
+
+class CheckJWT(APIView):
+    '''Check JSON web token'''
+    permission_classes = (IsAdminUser, )
+
+    def post(self, request, format=None):
+        return Response({'IsAuthenticated' : 'True'})
