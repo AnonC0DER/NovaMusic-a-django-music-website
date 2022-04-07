@@ -4,6 +4,7 @@ from music.models import Music, MusicComment
 from album.models import Album
 from music.forms import MusicCommentForm
 from music.utils import Search
+from core.tasks import send_email_task 
 
 def SongsPage(request):
     '''Songs page view'''
@@ -45,6 +46,8 @@ def SingleSongPage(request, slug, pk):
                 comment.save()
 
             messages.success(request, 'Successfully Submitted. Your comment will be available after review.')
+            # Send email to user using celery
+            send_email_task.delay(comment.owner.email)
             return redirect('single-song', slug=song.slug, pk=song.id)
 
     # Songs from this artist

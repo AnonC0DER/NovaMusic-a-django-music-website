@@ -9,8 +9,7 @@ def Search(reqeust):
         search_query = reqeust.GET.get('query')
     
     artist = Artist.objects.distinct().filter(
-        Q(title__icontains=search_query) | 
-        Q(published=True)
+        Q(title__icontains=search_query)
     )
 
     return artist
