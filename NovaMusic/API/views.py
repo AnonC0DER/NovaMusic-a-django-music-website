@@ -18,12 +18,16 @@ class AllApisUrlsView(APIView):
         Urls = {
             'GET' : {
                 'Albums' : '/api/albums/',
+                'Search albums' : '/api/albums/search/QUERY/',
                 'Single album' : '/api/album/ID/',
                 'Songs' : '/api/songs/',
+                'Search Songs' : '/api/songs/search/QUERY/',
                 'Single song' : '/api/song/ID/',
                 'Artists' : '/api/artists/',
+                'Search Artists' : '/api/artists/search/QUERY/',
                 'Single artist' : '/api/artist/ID/',
                 'Genres' : '/api/genres/',
+                'Search Genres' : '/api/genres/search/QUERY/',
                 'Single genre' : '/api/genre/ID/',
                 'NovaMusic APIs documentation' : '/api/docs/'
             },
@@ -44,21 +48,31 @@ class AlbumView(APIView):
     '''To get single album details, use this url : /album/ID/'''
     permission_classes = (IsAdminUser, )
     
-    def get(self, request, pk=None, format=None):
+    def get(self, request, pk=None, query=None, format=None):
+        if query:
+            albums = Album.objects.filter(published=True, title__icontains=query)
+            serializer = AlbumSerializer(albums, many=True)
+            return Response(serializer.data)
+
         if pk:
             album = Album.objects.get(id=pk)
             serializer = AlbumSerializer(album, many=False)
             return Response(serializer.data)
 
         else:
-            albums = Album.objects.all()
+            albums = Album.objects.filter(published=True)
             serializer = AlbumSerializer(albums, many=True)
             return Response(serializer.data)
 
           
 class GenreView(APIView):
     '''To get single genre details, use this url : /genre/ID/'''
-    def get(self, request, pk=None, format=None):
+    def get(self, request, pk=None, query=None, format=None):
+        if query:
+            genres = Genre.objects.filter(title__icontains=query)
+            serializer = GenreSerializer(genres, many=True)
+            return Response(serializer.data)
+
         if pk:
             genre = Genre.objects.get(id=pk)
             serializer = GenreSerializer(genre, many=False)
@@ -72,7 +86,12 @@ class GenreView(APIView):
 
 class ArtistView(APIView):
     '''To get single artist details, use this url : /artist/ID/'''
-    def get(self, request, pk=None, format=None):
+    def get(self, request, pk=None, query=None, format=None):
+        if query:
+            artists = Artist.objects.filter(title__icontains=query)
+            serializer = ArtistSerializer(artists, many=True)
+            return Response(serializer.data)
+
         if pk:
             artist = Artist.objects.get(id=pk)
             serializer = ArtistSerializer(artist, many=False)
@@ -88,14 +107,19 @@ class MusicView(APIView):
     '''To get single song details, use this url : /song/ID/'''
     permission_classes = (IsAdminUser, )
     
-    def get(self, request, pk=None, format=None):
+    def get(self, request, pk=None, query=None, format=None):
+        if query:
+            music = Music.objects.filter(title__icontains=query)
+            serializer = MusicSerializer(music, many=True)
+            return Response(serializer.data)
+
         if pk:
             music = Music.objects.get(id=pk)
             serializer = MusicSerializer(music, many=False)
             return Response(serializer.data)
 
         else:
-            music = Music.objects.all()
+            music = Music.objects.filter(published=True)
             serializer = MusicSerializer(music, many=True)
             return Response(serializer.data)
 

@@ -14,12 +14,16 @@ from API.views import (
 urlpatterns = [
     path('', AllApisUrlsView.as_view()),
     path('genres/', GenreView.as_view()),
+    path('genres/search/<query>/', GenreView.as_view()),
     path('genre/<pk>/', GenreView.as_view()),
     path('artists/', ArtistView.as_view()),
+    path('artists/search/<query>/', ArtistView.as_view()),
     path('artist/<pk>/', ArtistView.as_view()),
     path('albums/', AlbumView.as_view()),
+    path('albums/search/<query>/', AlbumView.as_view()),
     path('album/<pk>/', AlbumView.as_view()),
     path('songs/', MusicView.as_view()),
+    path('songs/search/<query>/', MusicView.as_view()),
     path('song/<pk>/', MusicView.as_view()),
 
     path('upload-music/', UploadMusicView.as_view()),

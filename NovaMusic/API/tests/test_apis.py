@@ -1,3 +1,4 @@
+import json
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.contrib.auth import get_user_model
@@ -13,7 +14,7 @@ def sample_artist():
 
 def sample_album():
     '''Create a sample album object'''
-    return Album.objects.create(title='Sample album')
+    return Album.objects.create(title='Sample album', published=True)
 
 def sample_genre():
     '''Create a sample genre object'''
@@ -21,7 +22,7 @@ def sample_genre():
 
 def sample_music():
     '''Create a sample music object'''
-    return Music.objects.create(title='Sample music')
+    return Music.objects.create(title='Sample music', published=True)
 
 
 class TestApiAccesses(TestCase):
@@ -35,8 +36,8 @@ class TestApiAccesses(TestCase):
         res = self.client.get('/api/songs/')
         res2 = self.client.get('/api/albums/')
 
-        self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(res2.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(res.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertEqual(res2.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_auth_not_required(self):
         '''Test authentication is not required to access genres and artists'''
@@ -73,6 +74,16 @@ class TestAlbumApi(TestCase):
         res = self.client.get(f'/api/album/{self.album.pk}/').json()
         
         self.assertEqual(res['title'], self.album.title)
+    
+    def test_search_albums(self):
+        '''Test search albums'''
+        res = self.client.get(f'/api/albums/search/Sample Album/').json()
+        res2 = self.client.get(f'/api/albums/search/SAMPLE AlBUm/').json()
+        
+        self.assertEqual(res[0]['title'], self.album.title)
+        self.assertEqual(res2[0]['title'], self.album.title)
+        self.assertEqual(res[0], res2[0])
+        
 
 
 class TestArtistApi(TestCase):
@@ -93,6 +104,15 @@ class TestArtistApi(TestCase):
         res = self.client.get(f'/api/artist/{self.artist.pk}/').json()
         
         self.assertEqual(res['title'], self.artist.title)
+    
+    def test_search_artists(self):
+        '''Test search artists'''
+        res = self.client.get(f'/api/artists/search/Sample artist/').json()
+        res2 = self.client.get(f'/api/artists/search/SAMPLE ArTISt/').json()
+        
+        self.assertEqual(res[0]['title'], self.artist.title)
+        self.assertEqual(res2[0]['title'], self.artist.title)
+        self.assertEqual(res[0], res2[0])
 
 
 class TestGenreApi(TestCase):
@@ -113,6 +133,15 @@ class TestGenreApi(TestCase):
         res = self.client.get(f'/api/genre/{self.genre.pk}/').json()
         
         self.assertEqual(res['title'], self.genre.title)
+    
+    def test_search_genres(self):
+        '''Test search genres'''
+        res = self.client.get(f'/api/genres/search/Sample genre/').json()
+        res2 = self.client.get(f'/api/genres/search/SAMPLE GeNRe/').json()
+        
+        self.assertEqual(res[0]['title'], self.genre.title)
+        self.assertEqual(res2[0]['title'], self.genre.title)
+        self.assertEqual(res[0], res2[0])
 
 
 class TestSongApi(TestCase):
@@ -141,3 +170,12 @@ class TestSongApi(TestCase):
         res = self.client.get(f'/api/song/{self.song.pk}/').json()
         
         self.assertEqual(res['title'], self.song.title)
+    
+    def test_search_songs(self):
+        '''Test search songs'''
+        res = self.client.get(f'/api/songs/search/Sample music/').json()
+        res2 = self.client.get(f'/api/songs/search/SAMPLE music/').json()
+        
+        self.assertEqual(res[0]['title'], self.song.title)
+        self.assertEqual(res2[0]['title'], self.song.title)
+        self.assertEqual(res[0], res2[0])
