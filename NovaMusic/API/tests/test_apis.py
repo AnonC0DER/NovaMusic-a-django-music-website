@@ -1,4 +1,4 @@
-import json
+import os
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.contrib.auth import get_user_model
@@ -52,6 +52,7 @@ class TestAlbumApi(TestCase):
     '''Tests to test albums api'''
 
     def setUp(self):
+        '''Create a sample superuser and create an album object'''
         self.album = sample_album()
         
         self.client = APIClient()
@@ -84,7 +85,6 @@ class TestAlbumApi(TestCase):
         self.assertEqual(res2[0]['title'], self.album.title)
         self.assertEqual(res[0], res2[0])
         
-
 
 class TestArtistApi(TestCase):
     '''Tests to test artists api'''
@@ -179,3 +179,82 @@ class TestSongApi(TestCase):
         self.assertEqual(res[0]['title'], self.song.title)
         self.assertEqual(res2[0]['title'], self.song.title)
         self.assertEqual(res[0], res2[0])
+
+
+class TestUploadFile(TestCase):
+    '''Tests to test upload files using APIs'''
+
+    def setUp(self):
+        '''Create a sample superuser'''
+        self.client = APIClient()
+        
+        self.album = sample_album()
+        self.genre = sample_genre()
+        self.artist = sample_artist()
+        
+        self.user = get_user_model().objects.create_superuser(
+            email='test@gmail.com',
+            password='testpass123'
+        )
+
+        self.client.force_authenticate(self.user)
+    
+    def test_upload_song(self):
+        '''Test upload a new song using REST API'''
+        title = 'Sample Song using API'
+        data = {
+            'title' : title,
+            'lyrics' : 'Sample lyrics',
+            'album' : [self.album.pk],
+            'genres' : [self.genre.pk],
+            'artists' : [self.artist.pk]
+        }
+
+        with open('song.mp3', 'w') as f:
+            song = f
+        
+        with open('thumbnail.jpg', 'w') as fp:
+            thumbnail = fp
+
+        files = {
+            'song': song,
+            'thumbnail': thumbnail,
+        }
+
+        res = self.client.post('/api/upload-music/', data=data, files=files)
+        qs = Music.objects.filter(title=title)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(qs.exists())
+
+        os.remove(song.name)
+        os.remove(thumbnail.name)
+    
+    def test_upload_album(self):
+        '''Test upload a new album using REST APIs'''
+        title = 'Sample album using API'
+        data = {
+            'title' : title,
+            'description' : 'Sample description',
+            'artists' : [self.artist.pk]
+        }
+
+        with open('album_image.jpg', 'w') as fp:
+            album_image = fp
+        
+        with open('album_file.zip', 'w') as f:
+            album_file = f
+
+        files = {
+            'album_image' : album_image,
+            'album_download_link_high_file' : album_file 
+        }
+
+        res = self.client.post('/api/upload-album/', data=data, files=files)
+        qs = Album.objects.filter(title=title)
+
+        self.assertEqual(res.status_code, status.HTTP_201_CREATED)
+        self.assertTrue(qs.exists())
+
+        os.remove(album_image.name)
+        os.remove(album_file.name)
