@@ -21,3 +21,7 @@ SECRET_ACCESS_KEY = storage secret access key
 STORAGE_BUCKET_NAME = storage bucket name
 CELERY_BROKER_URL = redis broker url for celery
 ```
+
+## Screenshots
+You can see all screenshots [here](https://github.com/AnonC0DER/NovaMusic-a-django-music-website/tree/main/screenshots)
+![ScreenShot](screenshots/home.jpg)
